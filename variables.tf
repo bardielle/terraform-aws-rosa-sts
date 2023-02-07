@@ -1,3 +1,9 @@
+variable create_oidc_provider {
+    description = "..."
+    type = bool
+}
+
+
 variable cluster_id {
     description = "cluster ID"
     type = string
