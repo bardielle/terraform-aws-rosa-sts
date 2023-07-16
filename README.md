@@ -181,7 +181,7 @@ operator_iam_roles = [
 ```
 module "create_account_roles"{
    source = "terraform-redhat/rosa-sts/aws"
-   version = "0.0.5"
+   version = "0.0.10"
 
    create_account_roles = true
 
@@ -212,7 +212,7 @@ data "rhcs_rosa_operator_roles" "operator_roles" {
 
 module operator_roles {
     source = "terraform-redhat/rosa-sts/aws"
-    version = "0.0.5"
+    version = "0.0.10"
     
     create_operator_roles = true
     create_oidc_provider = true
@@ -237,7 +237,7 @@ module operator_roles {
 ```
 module operator_roles {
     source = "terraform-redhat/rosa-sts/aws"
-    version = "0.0.5"
+    version = "0.0.10"
 
    create_oidc_config_resources = true
 

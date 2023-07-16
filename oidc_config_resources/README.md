@@ -39,7 +39,7 @@ The map looks like:
 ```
 module operator_roles {
     source = "terraform-redhat/rosa-sts/aws"
-    version = "0.0.5"
+    version = "0.0.10"
 
    create_oidc_config_resources = true
 
