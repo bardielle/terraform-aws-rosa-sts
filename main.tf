@@ -31,7 +31,9 @@ module "rosa_oidc_provider" {
 
 
 locals {
-  version_list = var.create_account_roles && var.all_versions != null ? [for s in var.all_versions.items : s.name] : []
+  minor_version_list = var.create_account_roles && var.all_versions != null ? [for s in var.all_versions.items : s.name] : []
+  major_version_list = local.minor_version_list != [] ? distinct([for s in local.minor_version_list : format("%s.%s", split(".", s)[0], split(".", s)[1])]) : []
+  version_list = sort(concat(local.major_version_list, local.minor_version_list))
 }
 
 resource "null_resource" "validate_all_version_input" {
