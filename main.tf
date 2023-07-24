@@ -31,9 +31,10 @@ module "rosa_oidc_provider" {
 
 
 locals {
-  minor_version_list = var.create_account_roles && var.all_versions != null ? [for s in var.all_versions.items : s.name] : []
-  major_version_list = local.minor_version_list != [] ? distinct([for s in local.minor_version_list : format("%s.%s", split(".", s)[0], split(".", s)[1])]) : []
-  version_list = sort(concat(local.major_version_list, local.minor_version_list))
+  patch_version_list = var.create_account_roles && var.all_versions != null ? [for s in var.all_versions.items : s.name] : []
+  num_minor_version_list = local.patch_version_list != [] ? distinct([for s in local.patch_version_list : tonumber(format("%s.%s", split(".", s)[0], split(".", s)[1]))]) : []
+  minor_version_list = local.num_minor_version_list != [] ? [for s in local.num_minor_version_list : tostring(s)]: []
+  default_version = var.rosa_openshift_version == "" && local.minor_version_list != [] ? local.minor_version_list[length(local.minor_version_list) - 1]: var.rosa_openshift_version
 }
 
 resource "null_resource" "validate_all_version_input" {
@@ -50,8 +51,8 @@ resource "null_resource" "validate_openshift_version" {
   count = var.create_account_roles && null_resource.validate_all_version_input != null ? 1 : 0
   lifecycle {
     precondition {
-      condition     = contains(local.version_list, var.rosa_openshift_version)
-      error_message = "ERROR: Expected a valid OpenShift version. Valid versions: ${join(", ",local.version_list)}"
+      condition     = contains(local.minor_version_list, var.rosa_openshift_version)
+      error_message = "ERROR: Expected a valid OpenShift version. Valid versions: ${join(", ",local.minor_version_list)}"
     }
   }
 }
